@@ -65,35 +65,36 @@ function isLoggedIn(req, res, next) {
 }
 
 // Login API
-
-// Login page dikhane ke liye
+// 1. Login page dikhao - GET
 app.get('/login', (req, res) => {
   res.send(`
-    <form method="POST" action="/login" style="text-align:center; margin-top:100px;">
-      <h2>Admin Login</h2>
-      <input name="username" placeholder="Username" required><br><br>
-      <input name="password" type="password" placeholder="Password" required><br><br>
-      <button type="submit">Login</button>
-    </form>
+    <html>
+    <body style="font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0">
+      <form method="POST" action="/login" style="background:white; padding:30px; border-radius:10px; box-shadow:0 0 10px #ccc">
+        <h2>Admin Login</h2>
+        <input type="text" name="username" placeholder="Username" required style="width:100%; padding:10px; margin:10px 0"><br>
+        <input type="password" name="password" placeholder="Password" required style="width:100%; padding:10px; margin:10px 0"><br>
+        <button type="submit" style="width:100%; padding:10px; background:green; color:white; border:none; border-radius:5px">Login</button>
+      </form>
+    </body>
+    </html>
   `);
 });
 
+// 2. Login check karo - POST
 app.post('/login', (req, res) => {
+  console.log("Body:", req.body); // debug ke liye
   const { username, password } = req.body;
   
-  // DB se user check karo
   const query = "SELECT * FROM users WHERE username = ? AND password = ?";
   db.query(query, [username, password], (err, results) => {
-    if(err) {
-      console.error(err);
-      return res.status(500).json({ error: "DB Error" });
-    }
+    if(err) return res.send("DB Error");
     
     if(results.length > 0) {
       req.session.loggedin = true;
-      res.json({success: true});
+      res.redirect('/admin/transactions'); // login hote hi transactions pe bhej do
     } else {
-      res.status(401).json({error: "Wrong credentials"});
+      res.send('Wrong credentials! <a href="/login">Wapas jao</a>');
     }
   });
 });
