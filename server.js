@@ -6,22 +6,23 @@ const QRCode = require('qrcode');
 const session = require('express-session');
 require('dotenv').config();
 
+
 const app = express();
+app.set('trust proxy', 1); // 1
+
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
+app.use(session({  // 2
   secret: 'secretkey123',
-  resave: false,
+  resave: false, 
   saveUninitialized: false,
-  cookie: {
-    secure: true,
-    sameSite: 'none',
-    maxAge: 1000 * 60 * 60
-  }
+  proxy: true,
+  cookie: { secure: true, sameSite: 'none', maxAge: 1000 * 60 * 60 }
 }));
+
 // DB Connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
