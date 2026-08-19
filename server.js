@@ -14,11 +14,15 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } 
+app.use(session({ 
+  secret: 'secretkey123', // secret change kar do
+  resave: false, 
+  saveUninitialized: false, // false kar do
+  cookie: { 
+    secure: true,        // YE ZARURI HAI
+    sameSite: 'none',    // YE BHI ZARURI HAI
+    maxAge: 1000 * 60 * 60 // 1 ghanta
+  } 
 }));
 
 // DB Connection
