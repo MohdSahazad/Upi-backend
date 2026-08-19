@@ -83,16 +83,23 @@ app.get('/login', (req, res) => {
 
 // 2. Login check karo - POST
 app.post('/login', (req, res) => {
-  console.log("Body:", req.body); // debug ke liye
+  console.log("Body:", req.body); 
   const { username, password } = req.body;
   
+  // PEHLE HARDCODE CHECK KARENGE - JUGAD
+  if(username === 'admin' && password === 'admin@123') {
+      req.session.loggedin = true;
+      return res.redirect('/admin/transactions');
+  }
+
+  // FIR DB CHECK KARENGE
   const query = "SELECT * FROM users WHERE username = ? AND password = ?";
   db.query(query, [username, password], (err, results) => {
-    if(err) return res.send("DB Error");
+    if(err) return res.send("DB Error: " + err);
     
     if(results.length > 0) {
       req.session.loggedin = true;
-      res.redirect('/admin/transactions'); // login hote hi transactions pe bhej do
+      res.redirect('/admin/transactions');
     } else {
       res.send('Wrong credentials! <a href="/login">Wapas jao</a>');
     }
