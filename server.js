@@ -43,6 +43,19 @@ function isLoggedIn(req, res, next) {
 }
 
 // Login API
+
+// Login page dikhane ke liye
+app.get('/login', (req, res) => {
+  res.send(`
+    <form method="POST" action="/login" style="text-align:center; margin-top:100px;">
+      <h2>Admin Login</h2>
+      <input name="username" placeholder="Username" required><br><br>
+      <input name="password" type="password" placeholder="Password" required><br><br>
+      <button type="submit">Login</button>
+    </form>
+  `);
+});
+
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   if(username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
