@@ -80,12 +80,22 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  if(username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
-    req.session.loggedin = true;
-    res.json({success: true});
-  } else {
-    res.status(401).json({error: "Wrong credentials"});
-  }
+  
+  // DB se user check karo
+  const query = "SELECT * FROM users WHERE username = ? AND password = ?";
+  db.query(query, [username, password], (err, results) => {
+    if(err) {
+      console.error(err);
+      return res.status(500).json({ error: "DB Error" });
+    }
+    
+    if(results.length > 0) {
+      req.session.loggedin = true;
+      res.json({success: true});
+    } else {
+      res.status(401).json({error: "Wrong credentials"});
+    }
+  });
 });
 
 app.get('/logout', (req, res) => {
