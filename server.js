@@ -37,6 +37,31 @@ db.connect((err) => {
   console.log("MySQL Connected!");
 });
 
+// DB connect hote hi table check karega
+db.connect((err) => {
+  if(err) throw err;
+  console.log("DB Connected");
+  
+  // 1. Table banayega agar nahi hai
+  const createTable = `CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    username VARCHAR(50) UNIQUE, 
+    password VARCHAR(255)
+  )`;
+  
+  db.query(createTable, (err) => {
+    if(err) throw err;
+    console.log("Table ready");
+    
+    // 2. Admin user insert karega agar nahi hai
+    const insertAdmin = `INSERT IGNORE INTO users (username, password) VALUES ('admin', 'admin@123')`;
+    db.query(insertAdmin, (err) => {
+      if(err) throw err;
+      console.log("Admin user ready");
+    });
+  });
+});
+
 // WhatsApp function HATA DIYA
 
 // Middleware
