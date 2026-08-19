@@ -8,23 +8,20 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
 app.use(express.static('public'));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({ 
-  secret: 'secretkey123', // secret change kar do
-  resave: false, 
-  saveUninitialized: false, // false kar do
-  cookie: { 
-    secure: true,        // YE ZARURI HAI
-    sameSite: 'none',    // YE BHI ZARURI HAI
-    maxAge: 1000 * 60 * 60 // 1 ghanta
-  } 
+app.use(session({
+  secret: 'secretkey123',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 60
+  }
 }));
-
 // DB Connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
