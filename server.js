@@ -29,18 +29,13 @@ const db = mysql.createConnection({
   database: process.env.DB_NAME
 });
 
+// DB connect hote hi table check karega - SIRF 1 BAAR
 db.connect((err) => {
   if(err) {
     console.error("DB Connection Error: ", err);
     process.exit(1);
   }
   console.log("MySQL Connected!");
-});
-
-// DB connect hote hi table check karega
-db.connect((err) => {
-  if(err) throw err;
-  console.log("DB Connected");
   
   // 1. Table banayega agar nahi hai
   const createTable = `CREATE TABLE IF NOT EXISTS users (
@@ -61,7 +56,6 @@ db.connect((err) => {
     });
   });
 });
-
 // WhatsApp function HATA DIYA
 
 // Middleware
