@@ -47,17 +47,39 @@ db.connect((err) => {
     password VARCHAR(255)
   )`;
   
-  db.query(createTable, (err) => {
+  // 1. users table
+  const createUsers = `CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    username VARCHAR(50) UNIQUE, 
+    password VARCHAR(255)
+  )`;
+  
+  db.query(createUsers, (err) => {
     if(err) throw err;
-    console.log("Table ready");
+    console.log("Users table ready");
     
-    const insertAdmin = `INSERT IGNORE INTO users (username, password) VALUES ('admin', 'admin@123')`;
-    db.query(insertAdmin, (err) => {
+    // 2. transactions table - YE MISSING THA
+    const createTxn = `CREATE TABLE IF NOT EXISTS transactions (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      txnid VARCHAR(100) UNIQUE,
+      name VARCHAR(100),
+      amount VARCHAR(20),
+      status VARCHAR(20) DEFAULT 'Pending',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`;
+    
+    db.query(createTxn, (err) => {
       if(err) throw err;
-      console.log("Admin user ready");
+      console.log("Transactions table ready");
+
+      // 3. admin user
+      const insertAdmin = `INSERT IGNORE INTO users (username, password) VALUES ('admin', 'admin@123')`;
+      db.query(insertAdmin, (err) => {
+        if(err) throw err;
+        console.log("Admin user ready");
+      });
     });
   });
-});
 
 function isLoggedIn(req, res, next) {
   if(req.session.loggedin) { next(); } 
